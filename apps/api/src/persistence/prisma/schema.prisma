@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       String    @id @default(cuid())
+  name     String?
+  email    String?   @unique
+  password DateTime?
+
+  createdAt DateTime @default(now())
+  // Transaction Transaction[]
+}
+
+model Transaction {
+  id String @id @default(cuid())
+  // ! When I implement auth, I'll add this relationship.
+  // userId String
+  // user User @relation(fields: [userId], references: [id])
+
+  type        Int
+  date        DateTime @db.Timestamptz(3)
+  product     String
+  seller      String
+  amount      Int
+  description String
+  nature      String
+  signal      String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt
+}
