@@ -10,7 +10,7 @@ export const testFilePath = resolve(
   '..',
   'sales.txt',
 );
-export const tmpFolder = resolve(__dirname, '..', '..', '..', '..', 'uploads');
+export const tmpFolder = resolve(__dirname, '..', '..', '..', '..', 'uploads/');
 
 export const readTestFile = (): Promise<Buffer> => {
   console.log(`Opening test file: `, testFilePath);
@@ -22,4 +22,8 @@ export const readTestFile = (): Promise<Buffer> => {
     console.error('Error while reading test file: ', err);
     exit(1);
   }
+};
+
+export const readUploadedFile = (filename: string) => {
+  return readFile(tmpFolder + '/' + filename, 'utf-8');
 };

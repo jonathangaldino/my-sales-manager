@@ -1,13 +1,15 @@
 import {
   Controller,
   Get,
-  HttpCode,
+  HttpStatus,
   Post,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { randomBytes } from 'crypto';
+import { Response } from 'express';
 import multer from 'multer';
 import {
   GetTransactinsApiDocs,
@@ -21,7 +23,6 @@ export class TransactionsController {
 
   @UploadTransactionsApiDocs()
   @Post('upload')
-  @HttpCode(201)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: multer.diskStorage({
@@ -35,15 +36,24 @@ export class TransactionsController {
       }),
     }),
   )
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Res() res: Response,
+  ) {
+    const { error, data } = await this.transactionsService.importTransactions(
+      file.filename,
+    );
 
-    const { data, error } = await this.transactionsService.create();
-    if (!error) {
-      return 'File uploaded';
-    } else {
-      return 'Wrong way to handle the file';
+    if (error) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        error: error.message,
+      });
     }
+
+    return res.status(HttpStatus.CREATED).json({
+      message: 'Transactions imported',
+      transactions: data,
+    });
   }
 
   @GetTransactinsApiDocs()

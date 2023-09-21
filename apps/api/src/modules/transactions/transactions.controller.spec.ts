@@ -11,6 +11,7 @@ describe('TransactionsController', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [TransactionsModule],
+      providers: [],
     }).compile();
 
     app = moduleRef.createNestApplication();
