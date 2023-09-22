@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { validationSchemaForEnv } from './config/environment-variables';
+import { AuthModule } from './modules/auth/auth.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { PersistenceModule } from './persistence/persistence.module';
 
@@ -12,6 +13,7 @@ import { PersistenceModule } from './persistence/persistence.module';
     }),
     PersistenceModule,
     TransactionsModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
