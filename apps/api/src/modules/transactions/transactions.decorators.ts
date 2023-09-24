@@ -1,5 +1,12 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { defaultUnauthorized } from '../auth/auth.decorators';
 
 /**
  * Swagger documentation for the endpoint: POST /transctions/upload
@@ -23,6 +30,38 @@ export function UploadTransactionsApiDocs() {
         },
       },
     }),
+    ApiResponse({
+      status: 201,
+      description:
+        'How many data was inserted and skipped in case of duplicates',
+      schema: {
+        type: 'object',
+        properties: {
+          inserted: {
+            type: 'number',
+            example: 30,
+          },
+          skipped: {
+            type: 'number',
+            example: 2,
+          },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 401,
+      description: 'In case of invalid or missing authentication bearer token',
+      schema: {
+        type: 'object',
+        properties: {
+          message: {
+            type: 'String',
+            example: 'Unauthorized',
+          },
+        },
+      },
+    }),
+    defaultUnauthorized(),
   );
 }
 

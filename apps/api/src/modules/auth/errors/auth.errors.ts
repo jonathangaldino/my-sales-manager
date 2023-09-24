@@ -1,6 +1,6 @@
 export class UserAlreadyExistsError extends Error {
   constructor() {
-    super('User tried to signup with an existing email');
+    super('Account already exists with that email');
   }
 }
 

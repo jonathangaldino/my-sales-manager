@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { PrismaService } from '~/persistence/prisma/prisma.service';
 import { AuthModule } from '../auth/auth.module';
+import { AuthService } from '../auth/auth.service';
 import { readTestFile } from './helpers/fileUpload.helper';
 import { TransactionsModule } from './transactions.module';
 
@@ -14,7 +15,7 @@ describe('TransactionsController', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [TransactionsModule, AuthModule],
-      providers: [PrismaService],
+      providers: [PrismaService, AuthService],
     }).compile();
 
     app = moduleRef.createNestApplication();

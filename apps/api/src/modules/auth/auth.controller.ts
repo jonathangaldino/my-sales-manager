@@ -7,6 +7,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { LoginAPIDocs, RegisterAPIDocs } from './auth.decorators';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
 import { RegisterDTO } from './dto/register.dto';
@@ -20,6 +21,7 @@ import {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @RegisterAPIDocs()
   @Post()
   async register(
     @Body(new ValidationPipe())
@@ -45,6 +47,7 @@ export class AuthController {
     });
   }
 
+  @LoginAPIDocs()
   @Post('/login')
   async login(
     @Body(new ValidationPipe()) loginDTO: LoginDTO,

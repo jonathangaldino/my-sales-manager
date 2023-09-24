@@ -1,14 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/persistence/prisma/prisma.service';
+import { ServiceResponse } from '~/shared/types';
 import { InvalidCredentialsError } from '../auth/errors/auth.errors';
 import { readUploadedFile } from './helpers/fileUpload.helper';
 import { formatTransactionsFile } from './helpers/transactions.helper';
 
+type UploadOutput = {
+  inserted: number;
+  skipped: number;
+};
 @Injectable()
 export class TransactionsService {
   constructor(private prisma: PrismaService) {}
 
-  async importTransactions(filename: string, userId: string) {
+  async importTransactions(
+    filename: string,
+    userId: string,
+  ): Promise<ServiceResponse<UploadOutput, InvalidCredentialsError>> {
     const user = await this.prisma.user.findUnique({
       where: {
         id: userId,
