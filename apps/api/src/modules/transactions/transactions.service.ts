@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '~/persistence/prisma/prisma.service';
 import { ServiceResponse } from '~/shared/types';
-import { InvalidCredentialsError } from '../auth/errors/auth.errors';
+import {
+  InvalidCredentialsError,
+  UserNotFoundError,
+} from '../auth/errors/auth.errors';
+import { ListUserTransactionsDTO } from './dto/list-user-transactions.dto';
 import { readUploadedFile } from './helpers/fileUpload.helper';
 import { formatTransactionsFile } from './helpers/transactions.helper';
 
@@ -56,5 +60,49 @@ export class TransactionsService {
         data: null,
       };
     }
+  }
+
+  async listUserTransactions(dto: ListUserTransactionsDTO) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: dto.userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) {
+      return {
+        data: null,
+        error: new UserNotFoundError(),
+      };
+    }
+
+    const transactions = await this.prisma.transaction.findMany({
+      where: {
+        userId: user.id,
+      },
+      take: dto.limit || 10,
+      skip: dto.offset * dto.limit || 0,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const count = await this.prisma.transaction.count({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    const totalPages = Math.ceil(count / dto.limit);
+
+    return {
+      data: {
+        totalPages,
+        transactions,
+      },
+    };
   }
 }

@@ -3,6 +3,8 @@ import {
   Get,
   HttpStatus,
   Post,
+  Query,
+  Req,
   Request,
   Res,
   UploadedFile,
@@ -13,6 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { randomBytes } from 'crypto';
 import { Response } from 'express';
 import multer from 'multer';
+import { UserNotFoundError } from '../auth/errors/auth.errors';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import {
   GetTransactinsApiDocs,
@@ -64,8 +67,34 @@ export class TransactionsController {
   }
 
   @GetTransactinsApiDocs()
+  @UseGuards(AuthGuard)
   @Get('/')
-  getTransactions() {
+  async getTransactions(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('limit') limitQuery?: string,
+    @Query('offset') offsetQuery?: string,
+  ) {
+    const limit = Number(limitQuery || 10);
+    const offset = Number(offsetQuery || 0);
+
+    const { error, data } = await this.transactionsService.listUserTransactions(
+      {
+        limit,
+        offset,
+        // @ts-expect-error because i didn't type express yet
+        userId: req.userId,
+      },
+    );
+
+    if (error instanceof UserNotFoundError) {
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(HttpStatus.OK).json(data);
+
     return {};
   }
 }
