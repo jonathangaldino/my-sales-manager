@@ -8,7 +8,7 @@ export function generateToken(user: Omit<UserEntity, 'password'>) {
 
 export function decryptToken(token: string): string | null {
   try {
-    const decodedToken: { id?: string } = jwt.verify(token, 'batman');
+    const decodedToken: { id?: string } = jwt.verify(token, 'super-secret-key');
 
     if (!decodedToken.id) {
       return null;

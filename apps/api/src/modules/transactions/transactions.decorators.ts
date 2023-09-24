@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 /**
  * Swagger documentation for the endpoint: POST /transctions/upload
@@ -8,6 +8,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 export function UploadTransactionsApiDocs() {
   return applyDecorators(
     ApiTags('transactions'),
+    ApiBearerAuth(),
     ApiConsumes('multipart/form-data'),
     ApiBody({
       description: 'The file with the transactions to import.',

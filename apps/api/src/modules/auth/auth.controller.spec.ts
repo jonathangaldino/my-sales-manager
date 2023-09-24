@@ -10,7 +10,6 @@ describe('Auth Controller', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AuthModule],
-      providers: [],
     }).compile();
 
     app = moduleRef.createNestApplication();

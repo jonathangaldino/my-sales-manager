@@ -33,6 +33,7 @@ export const parseTransactionType = (type: number) => {
 
 export const formatTransactionsFile = (
   transactionFileContent: string[],
+  userId: string,
 ): TransactionFile[] => {
   const transactions = transactionFileContent.map((transaction: string) => {
     const type = Number(transaction.slice(0, 1));
@@ -44,7 +45,7 @@ export const formatTransactionsFile = (
 
     if (transaction) {
       return {
-        // user_id: user.id,
+        userId,
         type,
         date,
         product,

@@ -13,7 +13,7 @@ export const testFilePath = resolve(
 export const tmpFolder = resolve(__dirname, '..', '..', '..', '..', 'uploads/');
 
 export const readTestFile = (): Promise<Buffer> => {
-  console.log(`Opening test file: `, testFilePath);
+  // console.log(`Opening test file: `, testFilePath);
 
   try {
     const fileBuffer = readFile(testFilePath);

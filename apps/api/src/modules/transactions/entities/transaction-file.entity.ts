@@ -7,4 +7,5 @@ export type TransactionFile = {
   product: string;
   amount: number;
   seller: string;
+  userId: string;
 };

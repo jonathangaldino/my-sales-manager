@@ -3,14 +3,17 @@ import {
   Get,
   HttpStatus,
   Post,
+  Request,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { randomBytes } from 'crypto';
 import { Response } from 'express';
 import multer from 'multer';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import {
   GetTransactinsApiDocs,
   UploadTransactionsApiDocs,
@@ -36,12 +39,16 @@ export class TransactionsController {
       }),
     }),
   )
+  @UseGuards(AuthGuard)
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
+    @Request() req: Request,
     @Res() res: Response,
   ) {
     const { error, data } = await this.transactionsService.importTransactions(
       file.filename,
+      // @ts-expect-error because i didn't type express yet
+      req.userId,
     );
 
     if (error) {
