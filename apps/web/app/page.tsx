@@ -1,8 +1,26 @@
-export default async function IndexPage() {
+"use client"
+
+import { useRouter } from "next/navigation";
+import { Suspense, useEffect } from "react";
+import { getToken } from "./auth/storage";
+
+export default function IndexPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      router.push('/auth')
+    }
+  }, [router, getToken])
+  
+
   return (
-    <div>
-      <h1>Hello World</h1>
-      <pre>sup</pre>
-    </div>
+    <Suspense>
+      <div>
+        <button>Login</button>
+      </div>
+    </Suspense>
   );
 }
