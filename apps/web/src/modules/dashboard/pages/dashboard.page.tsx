@@ -1,21 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
-import { getToken } from "../../auth/storage";
+import DashboardContent from "../components/DashboardContent.component";
+import DashboardTab from "../components/Tab.component";
+import { TabProvider } from "../hooks/useTab";
 
 const DashboardPage = () => {
 
-  useEffect(() => {
-    const token = getToken();
-
-    if (!token) {
-      // router.push('/auth')
-    }
-  }, [])
-
-
   return (
-    <h1>Dashboard</h1>
+    <TabProvider>
+      <DashboardTab />
+
+      <DashboardContent />
+    </TabProvider>
   )
 }
 
