@@ -178,10 +178,10 @@ export class TransactionsService {
 
     return {
       data: {
-        paidComission,
-        receivedComission,
-        affiliateSales,
-        producerSales,
+        paidComission: paidComission || 0,
+        receivedComission: receivedComission || 0,
+        affiliateSales: affiliateSales || 0,
+        producerSales: producerSales || 0,
       },
       error: null,
     };
