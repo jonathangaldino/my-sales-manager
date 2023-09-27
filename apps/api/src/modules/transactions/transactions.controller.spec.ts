@@ -22,7 +22,7 @@ const createTestingModule = async () => {
 const getToken = async (
   app: INestApplication<NestExpressApplication>,
   email?: string,
-) => {
+): Promise<string> => {
   const { body, status } = await request(app.getHttpServer())
     .post('/auth')
     .send({
@@ -136,6 +136,53 @@ describe('TransactionsController', () => {
       });
 
       expect(body).toHaveProperty('totalPages', 2);
+    });
+  });
+
+  describe('GET /transactions/analytics', () => {
+    beforeAll(async () => {
+      await uploadTransactions(token);
+    });
+
+    const getAnalytics = async ({
+      validate = false,
+      authToken,
+    }: {
+      validate: boolean;
+      authToken: string;
+    }) => {
+      const { status, body } = await request(app.getHttpServer())
+        .get(`/transactions/analytics`)
+        .set('authorization', `Bearer ${authToken}`)
+        .send();
+
+      if (validate) {
+        expect(status).toBe(200);
+        expect(body).toHaveProperty('paidComission', expect.any(Number));
+        expect(body).toHaveProperty('receivedComission', expect.any(Number));
+        expect(body).toHaveProperty('affiliateSales', expect.any(Number));
+        expect(body).toHaveProperty('producerSales', expect.any(Number));
+      }
+
+      return { body, status };
+    };
+
+    it('return 200 with analytics data in the body', async () => {
+      await getAnalytics({ validate: true, authToken: token });
+    });
+
+    it('return 200 but anylitics should be zero in case of 0 transactions', async () => {
+      const token = await getToken(app, 'newaccount2@gmail.com');
+      const { body, status } = await getAnalytics({
+        authToken: token,
+        validate: false,
+      });
+
+      expect(status).toBe(200);
+      expect(body).toHaveProperty('paidComission', 0);
+      expect(body).toHaveProperty('receivedComission', 0);
+      expect(body).toHaveProperty('affiliateSales', 0);
+      expect(body).toHaveProperty('producerSales', 0);
     });
   });
 
