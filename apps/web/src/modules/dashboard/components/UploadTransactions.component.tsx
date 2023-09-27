@@ -72,6 +72,8 @@ const UploadTransactions = () => {
             )}
           />
         </form>
+
+        {error && <p>Failed to import file.</p>}
       </div>
     </div>
   );
