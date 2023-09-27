@@ -43,9 +43,15 @@ COPY --from=builder /app/out/full/ .
 COPY .gitignore .gitignore
 RUN pwd && ls
 RUN yarn turbo run build --scope=api --include-dependencies --no-deps
-# RUN pnpm turbo run db:generate
+RUN yarn turbo run db:generate --scope=api
 
-# FROM node:16-alpine as runner
-# WORKDIR /app
-# COPY --from=sourcer /app/ .
-# CMD [ "node", "apps/api/dist/main.js" ]
+FROM node:18-alpine as runner
+
+# Expose default port of nestjs?
+EXPOSE 3000
+
+WORKDIR /app
+
+COPY --from=sourcer /app/ .
+
+CMD [ "node", "apps/api/dist/main.js" ]
