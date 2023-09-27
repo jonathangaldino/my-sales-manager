@@ -6,6 +6,7 @@ import {
   UserNotFoundError,
 } from '../auth/errors/auth.errors';
 import { ListUserTransactionsDTO } from './dto/list-user-transactions.dto';
+import { TransactionEntity } from './entities/transaction.entity';
 import { readUploadedFile } from './helpers/fileUpload.helper';
 import { formatTransactionsFile } from './helpers/transactions.helper';
 
@@ -13,6 +14,12 @@ type UploadOutput = {
   inserted: number;
   skipped: number;
 };
+
+type ListUserOutput = {
+  totalPages: number;
+  transactions: TransactionEntity[];
+};
+
 @Injectable()
 export class TransactionsService {
   constructor(private prisma: PrismaService) {}
@@ -62,7 +69,9 @@ export class TransactionsService {
     }
   }
 
-  async listUserTransactions(dto: ListUserTransactionsDTO) {
+  async listUserTransactions(
+    dto: ListUserTransactionsDTO,
+  ): Promise<ServiceResponse<ListUserOutput, UserNotFoundError>> {
     const user = await this.prisma.user.findUnique({
       where: {
         id: dto.userId,
@@ -103,6 +112,7 @@ export class TransactionsService {
         totalPages,
         transactions,
       },
+      error: null,
     };
   }
 }

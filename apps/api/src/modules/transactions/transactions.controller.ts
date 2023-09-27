@@ -17,6 +17,7 @@ import { Response } from 'express';
 import multer from 'multer';
 import { UserNotFoundError } from '../auth/errors/auth.errors';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { TransactionEntity } from './entities/transaction.entity';
 import {
   GetTransactinsApiDocs,
   UploadTransactionsApiDocs,
@@ -93,8 +94,27 @@ export class TransactionsController {
       });
     }
 
-    return res.status(HttpStatus.OK).json(data);
-
-    return {};
+    return res.status(HttpStatus.OK).json({
+      totalPages: data.totalPages,
+      transactions: formatTransactions(data.transactions),
+    });
   }
 }
+
+const parseDate = (date: Date) => {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear()).slice(-2);
+
+  return `${day}/${month}/${year}`;
+};
+
+const formatTransactions = (transactions: TransactionEntity[]) =>
+  transactions.map((transaction) => ({
+    ...transaction,
+    amount: (transaction.amount / 100).toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL',
+    }),
+    date: parseDate(transaction.date),
+  }));
