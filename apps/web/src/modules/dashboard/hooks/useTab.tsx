@@ -1,9 +1,9 @@
-import { ReactNode, createContext, useContext, useState } from 'react';
+import { ReactNode, createContext, useContext, useState } from "react";
 
-type Tabs = 'upload' | 'dashboard'
+export type Tabs = "upload" | "dashboard" | "settings";
 
 type TabContextType = {
-  activeTab: string;
+  activeTab: Tabs;
   setActiveTab: (tab: Tabs) => void;
 };
 
@@ -14,12 +14,10 @@ type TabProviderProps = {
 };
 
 export function TabProvider({ children }: TabProviderProps) {
-  const [activeTab, setActiveTab] = useState<Tabs>('upload');
+  const [activeTab, setActiveTab] = useState<Tabs>("upload");
 
   const setActiveTabValue = (newTab: Tabs) => {
-    if (newTab === 'upload' || newTab === 'dashboard') {
-      setActiveTab(newTab);
-    }
+    setActiveTab(newTab);
   };
 
   return (
@@ -32,7 +30,7 @@ export function TabProvider({ children }: TabProviderProps) {
 export function useTab() {
   const context = useContext(TabContext);
   if (!context) {
-    throw new Error('useTab must be used within a TabProvider');
+    throw new Error("useTab must be used within a TabProvider");
   }
   return context;
 }
