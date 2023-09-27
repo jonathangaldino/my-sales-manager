@@ -17,6 +17,7 @@ import { Response } from 'express';
 import multer from 'multer';
 import { UserNotFoundError } from '../auth/errors/auth.errors';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { APITransaction } from './dto/list-user-transactions.dto';
 import { TransactionEntity } from './entities/transaction.entity';
 import {
   GetTransactinsApiDocs,
@@ -109,7 +110,9 @@ const parseDate = (date: Date) => {
   return `${day}/${month}/${year}`;
 };
 
-const formatTransactions = (transactions: TransactionEntity[]) =>
+const formatTransactions = (
+  transactions: TransactionEntity[],
+): APITransaction[] =>
   transactions.map((transaction) => ({
     ...transaction,
     amount: (transaction.amount / 100).toLocaleString('pt-br', {
