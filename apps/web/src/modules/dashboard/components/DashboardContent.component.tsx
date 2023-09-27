@@ -1,4 +1,5 @@
 import { useTab } from "../hooks/useTab";
+import Transactions from "./Transactions.component";
 import UploadTransactions from "./UploadTransactions.component";
 
 const DashboardContent = () => {
@@ -8,7 +9,7 @@ const DashboardContent = () => {
     return <UploadTransactions />
   }
 
-  return <p>Dashboard</p>
+  return <Transactions />
 }
 
 export default DashboardContent;

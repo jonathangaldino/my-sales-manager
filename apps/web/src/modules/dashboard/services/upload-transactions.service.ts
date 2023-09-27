@@ -1,11 +1,12 @@
+import { AxiosError } from "axios";
 import reqInstance from "../../../shared/helpers/axios";
+import { ServiceResponse } from "../../../shared/types";
 import { getToken } from "../../auth/storage";
 
 
-type ServiceResponse<D> = { data: D, error: null } | { data: null, error: Error }
 type APIResponse = {inserted: number, skipped: number}
 
-export const uploadTransactions = async (file: File): Promise<ServiceResponse<APIResponse>> => {
+export const uploadTransactions = async (file: File): Promise<ServiceResponse<APIResponse, AxiosError>> => {
   const fd = new FormData();
   fd.append('file', file)
 
@@ -31,7 +32,7 @@ export const uploadTransactions = async (file: File): Promise<ServiceResponse<AP
     }
   } catch (error) {
     return {
-      error: error as Error,
+      error: error as AxiosError,
       data: null,
     }
   }
