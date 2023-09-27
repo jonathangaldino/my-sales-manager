@@ -21,7 +21,7 @@ type ListUserOutput = {
 };
 
 type AnalyticsOutput = {
-  paidCommission: number;
+  paidComission: number;
   receivedComission: number;
   affiliateSales: number;
   producerSales: number;
@@ -129,7 +129,7 @@ export class TransactionsService {
     userId: string;
   }): Promise<ServiceResponse<AnalyticsOutput, null>> {
     const {
-      _sum: { amount: paidCommission },
+      _sum: { amount: paidComission },
     } = await this.prisma.transaction.aggregate({
       _sum: {
         amount: true,
@@ -178,7 +178,7 @@ export class TransactionsService {
 
     return {
       data: {
-        paidCommission,
+        paidComission,
         receivedComission,
         affiliateSales,
         producerSales,
