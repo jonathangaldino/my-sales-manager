@@ -1,19 +1,40 @@
 version: "3"
 
 volumes:
-  database:
-    driver: local
+  postgres_data:
 
 services:
-  mysql:
-    platform: linux/amd64
-    image: mysql:8.0.32
-    container_name: turborepo_mysql
+  database:
+    image: postgres:latest
+    container_name: msm-postgres
     restart: always
     ports:
-      - 3306:3306
+      - 5432:5432
     environment:
-      MYSQL_DATABASE: turborepo
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      POSTGRES_DB: my-sales-manager
+      POSTGRES_USER: msm
+      POSTGRES_PASSWORD: msm
     volumes:
-      - database:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    image: my-sales-manager-api
+    container_name: msm-api
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL: postgres://msm:msm@database:5432/my-sales-manager
+    depends_on:
+      - database
+
+  web:
+    image: my-sales-manager-web
+    container_name: msm-web
+    restart: always
+    ports:
+      - 3001:80
+    environment:
+      REACT_APP_API_URL: http://api:3000
+    depends_on:
+      - api
