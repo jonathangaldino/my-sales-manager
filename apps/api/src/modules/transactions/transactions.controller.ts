@@ -20,6 +20,7 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { APITransaction } from './dto/list-user-transactions.dto';
 import { TransactionEntity } from './entities/transaction.entity';
 import {
+  GetAnalyticsApiDocs,
   GetTransactinsApiDocs,
   UploadTransactionsApiDocs,
 } from './transactions.decorators';
@@ -99,6 +100,18 @@ export class TransactionsController {
       totalPages: data.totalPages,
       transactions: formatTransactions(data.transactions),
     });
+  }
+
+  @GetAnalyticsApiDocs()
+  @UseGuards(AuthGuard)
+  @Get('/analytics')
+  async getTransactionsAnalytics(@Req() req: Request, @Res() res: Response) {
+    const { data } = await this.transactionsService.getTransactionAnalytics({
+      // @ts-expect-error because i didn't type express yet
+      userId: req.userId,
+    });
+
+    return res.status(HttpStatus.OK).json(data);
   }
 }
 

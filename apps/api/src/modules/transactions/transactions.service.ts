@@ -20,6 +20,13 @@ type ListUserOutput = {
   transactions: TransactionEntity[];
 };
 
+type AnalyticsOutput = {
+  paidCommission: number;
+  receivedComission: number;
+  affiliateSales: number;
+  producerSales: number;
+};
+
 @Injectable()
 export class TransactionsService {
   constructor(private prisma: PrismaService) {}
@@ -111,6 +118,70 @@ export class TransactionsService {
       data: {
         totalPages,
         transactions,
+      },
+      error: null,
+    };
+  }
+
+  async getTransactionAnalytics({
+    userId,
+  }: {
+    userId: string;
+  }): Promise<ServiceResponse<AnalyticsOutput, null>> {
+    const {
+      _sum: { amount: paidCommission },
+    } = await this.prisma.transaction.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        userId,
+        description: 'Comissão paga',
+      },
+    });
+
+    const {
+      _sum: { amount: receivedComission },
+    } = await this.prisma.transaction.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        userId,
+        description: 'Comissão recebida',
+      },
+    });
+
+    const {
+      _sum: { amount: affiliateSales },
+    } = await this.prisma.transaction.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        userId,
+        description: 'Venda afiliado',
+      },
+    });
+
+    const {
+      _sum: { amount: producerSales },
+    } = await this.prisma.transaction.aggregate({
+      _sum: {
+        amount: true,
+      },
+      where: {
+        userId,
+        description: 'Venda produtor',
+      },
+    });
+
+    return {
+      data: {
+        paidCommission,
+        receivedComission,
+        affiliateSales,
+        producerSales,
       },
       error: null,
     };

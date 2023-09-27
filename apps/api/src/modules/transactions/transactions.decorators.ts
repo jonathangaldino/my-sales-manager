@@ -8,6 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { defaultUnauthorized } from '../auth/auth.decorators';
 import { ListUserTransactionsResponse } from './dto/list-user-transactions.dto';
+import { GetAnalyticsResponse } from './dto/transaction-analytics.dto';
 
 /**
  * Swagger documentation for the endpoint: POST /transctions/upload
@@ -77,6 +78,17 @@ export function GetTransactinsApiDocs() {
     ApiResponse({
       status: 200,
       type: ListUserTransactionsResponse,
+    }),
+  );
+}
+
+export function GetAnalyticsApiDocs() {
+  return applyDecorators(
+    ApiTags('transactions'),
+    ApiBearerAuth(),
+    ApiResponse({
+      status: 200,
+      type: GetAnalyticsResponse,
     }),
   );
 }
