@@ -71,4 +71,4 @@ yarn run dev
 ## Useful Links
 
 
-- [Youtube video explaining the project](https://youtu.be/jnnSkj54fFM)
+- [Youtube video explaining the project](https://youtu.be/E6sB23hSeA8)
