@@ -1,13 +1,11 @@
 # My Sales Manager (API)
 
-## Description
-
 The backend API behind MSM.
 
 ## Installation
 
 ```bash
-$ pnpm install
+$ yarn install
 ```
 
 ## Running the app
@@ -29,13 +27,13 @@ When you're done, use these scripts:
 
 ```bash
 # development
-$ pnpm run start
+$ yarn run start
 
 # watch mode
-$ pnpm run start:dev
+$ yarn run start:dev
 
 # production mode
-$ pnpm run start:prod
+$ yarn run start:prod
 ```
 
 ## Test
@@ -58,13 +56,13 @@ POSTGRES_DB=postgres
 
 ```bash
 # unit tests
-$ pnpm run test
+$ yarn run test
 
 # e2e tests
-$ pnpm run test:e2e
+$ yarn run test:e2e
 
 # test coverage
-$ pnpm run test:cov
+$ yarn run test:cov
 ```
 
 ## API Docs
