@@ -35,11 +35,16 @@ RUN yarn install --frozen-lockfile
 
 FROM node:18-alpine AS sourcer
 
+ARG API_URL
+ENV REACT_APP_API_URL=$API_URL
+
 WORKDIR /app
 
 COPY --from=installer /app/ .
 COPY --from=builder /app/out/full/ .
 COPY .gitignore .gitignore
+
+# Copy the .env file into the build stage
 RUN yarn turbo run build --scope=web --include-dependencies --no-deps
 
 ########################################################################

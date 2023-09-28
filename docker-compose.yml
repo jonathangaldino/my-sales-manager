@@ -31,10 +31,14 @@ services:
   web:
     image: my-sales-manager-web
     container_name: msm-web
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+      args:
+        REACT_APP_API_URL: http://api:3000
+
     restart: always
     ports:
       - 3001:80
-    environment:
-      REACT_APP_API_URL: http://api:3000
     depends_on:
       - api
