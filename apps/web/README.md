@@ -1,7 +1,10 @@
-# My Sales Manager WebApp
+# My Sales Manager (Web)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Before starting out
+
+Copy `.env.example` to `.env`. Add the API URL and be happy.
 ## Available Scripts
 
 In the project directory, you can run:

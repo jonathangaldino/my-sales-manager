@@ -10,7 +10,7 @@ $ yarn install
 
 ## Running the app
 
-You might need a postgres database. You can use a cloud one OR deploy one through docker-compose.
+You might need a postgres database. You can use a cloud one OR deploy one through Docker or Docker-compose.
 
 The app requires some environment variables. Feel free to check them on `.env.example` file.
 
@@ -48,11 +48,17 @@ Create a `.env.testing` file with these variables (E.g):
 ```bash
 DATABASE_URL='postgres://postgres:postgres@localhost:5432/mysalesmanager'
 
+# these are required
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=postgres
 
 ```
+P.S: We're not mocking Prisma, that's why we must have a database up & running before executing test scripts.
+
+For more details, check `jest.setup.ts`. 
+
+> **TLDR:** We're creating a db schema for every jest environment and then, after tests, we're destroying it. So, technically, every test file runs in a different schema. One file won't interefere with the other. However, tests within the same file should be aware of interefence.
 
 ```bash
 # unit tests
@@ -68,7 +74,3 @@ $ yarn run test:cov
 ## API Docs
 
 Spin up the local server and go to `http://localhost:3000/api`. We have swagger up and running.
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).

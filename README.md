@@ -25,6 +25,11 @@ This turborepo has some additional tools already setup for you:
 - [Prisma](https://prisma.io/) for database ORM
 - [Docker Compose](https://docs.docker.com/compose/) for local database
 
+### Development
+
+Feel free to hot on in each app folder and follow the guidelines to develop the project.
+
+To run, use docker-compose, much easier.
 
 ### Build
 
@@ -35,24 +40,20 @@ yarn run build
 ```
 
 ### Docker
-To build apps a generate docker images, you can run these two commands:
+Use docker compose to deploy a Postgres database, the backend app and the frontend app.
 
-```bash
-# for the api app
-$ docker build -t my-sales-manager-api . -f ./apps/api/Dockerfile
-
-# for the web app
-$ docker build -t my-sales-manager-web . -f ./apps/web/Dockerfile
-```
-
-We also have a docker-compose at root folder of the project. Feel free to use it to deploy the web, the api and the database (postgres).
 
 ```bash
 $ docker compose up -d
 ```
 
-If is your first time deploying the database, you might need to create the database and the tables.
-Create a database, we chose `my-sales-manager` as the default name, and then run prisma to deploy the migrations:
+If is your first time deploying the database, you might need to create the database and the tables with Prisma.
+
+```bash
+$ yarn workspace api prisma migrate dev
+```
+
+Copy `/api/.env.example` to `/api/.env` and then run this command to run the migrations.
 
 ```bash
 $ yarn workspace api prisma migrate dev
