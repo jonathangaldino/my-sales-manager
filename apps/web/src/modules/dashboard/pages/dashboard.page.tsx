@@ -5,7 +5,6 @@ import DashboardTab from "../components/Tab.component";
 import { TabProvider } from "../hooks/useTab";
 
 const DashboardPage = () => {
-
   return (
     <TabProvider>
       <DashboardTab />

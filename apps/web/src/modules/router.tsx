@@ -1,22 +1,12 @@
 import React from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { getToken } from "./auth/storage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PrivateRouter from "./privateRouter";
 
 const AuthPage = React.lazy(() => import("./auth/pages/auth.page"));
 const DashboardPage = React.lazy(
   () => import("./dashboard/pages/dashboard.page")
 );
 const PageNotFound = React.lazy(() => import("../shared/pages/not-found.page"));
-
-const PrivateRouter = ({ children }: { children: React.ReactNode }) => {
-  const token = getToken();
-
-  if (!token) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  return <>{children}</>;
-};
 
 const Router = () => {
   return (

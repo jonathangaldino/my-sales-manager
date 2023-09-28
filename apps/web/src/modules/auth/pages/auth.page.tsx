@@ -1,67 +1,36 @@
 import { ChangeEvent, useState } from "react";
-import { useNavigate } from "react-router";
-import reqInstance from "../../../shared/helpers/axios";
-import { updateToken } from "../storage";
-
-type ServiceResponse<D> =
-  | { data: D; error: null }
-  | { data: null; error: Error };
-
-const sendAuthRequest = async ({
-  email,
-  password,
-  action,
-}: {
-  email: string;
-  password: string;
-  action: "login" | "register";
-}): Promise<ServiceResponse<{ token: string }>> => {
-  let url = `/auth`;
-
-  if (action === "login") {
-    url += "/login";
-  }
-
-  try {
-    const { data } = await reqInstance.post<{ token: string }>(url, {
-      email,
-      password,
-    });
-
-    return {
-      data,
-      error: null,
-    };
-  } catch (err) {
-    return {
-      data: null,
-      error: new Error(`Failed to ${action}`),
-    };
-  }
-};
+import { Navigate } from "react-router";
+import { useAuthStore } from "../hooks/useAuth";
 
 export default function AuthPage() {
-  const navigate = useNavigate();
+  const { auth, isAuthenticated } = useAuthStore()
+
   const [action, setAction] = useState<"register" | "login">("login");
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({ email: "", password: "" });
 
+  if (isAuthenticated) {
+    console.log('User is authenticated. Moving to dashboard.')
+    return <Navigate to="/" replace />;
+  }
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    const { data, error } = await sendAuthRequest({
+    const { error } =  await auth({ 
       email: formData.email,
       password: formData.password,
-      action,
-    });
+      action
+    })
 
     if (error) {
-      setError(error.message);
+      setError(error.message)
       return;
     }
 
-    updateToken(data.token);
-    return navigate("/");
+    // no need to navigate programmaticaly
+    // when the store updates, isAuthenticated becomes true
+    // that if on line 47 will do the job
   };
 
   const changeAction = () => {
