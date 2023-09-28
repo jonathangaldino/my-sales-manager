@@ -37,21 +37,33 @@ FROM node:18-alpine AS sourcer
 
 WORKDIR /app
 
-
+# What is this doing
 COPY --from=installer /app/ .
 COPY --from=builder /app/out/full/ .
-COPY .gitignore .gitignore
-RUN pwd && ls
-RUN yarn turbo run build --scope=api --include-dependencies --no-deps
-RUN yarn turbo run db:generate --scope=api
 
+
+# Use turbo to call NestCLI and generate the build of the nest js app
+RUN yarn turbo run build --scope=api --include-dependencies --no-deps
+
+########################################################################
+#### runner
+########################################################################
 FROM node:18-alpine as runner
 
 # Expose default port of nestjs?
 EXPOSE 3000
 
-WORKDIR /app
+# Our app will be inside /nestapp folder
+WORKDIR /nestapp
 
-COPY --from=sourcer /app/ .
+COPY --from=installer /app/ .
 
-CMD [ "node", "apps/api/dist/main.js" ]
+COPY --from=sourcer /app/apps/api/dist ./apps/api/src
+
+# Copy prisma schema file
+COPY --from=sourcer /app/apps/api/src/persistence/prisma/schema.prisma /nestapp/apps/api/src/persistence/prisma/schema.prisma
+
+# Generate prisma classes
+RUN yarn turbo run db:generate --scope=api
+
+CMD [ "node", "apps/api/src/main.js" ]
