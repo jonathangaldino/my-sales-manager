@@ -18,8 +18,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   api:
-    image: my-sales-manager-api
     container_name: msm-api
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
     restart: always
     ports:
       - 3000:3000
@@ -29,12 +31,11 @@ services:
       - database
 
   web:
-    image: my-sales-manager-web
     container_name: msm-web
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
-      args:
+      args: # useful for passing variables at build time to create react app
         REACT_APP_API_URL: http://api:3000
 
     restart: always

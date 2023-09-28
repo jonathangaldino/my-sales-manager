@@ -7,7 +7,7 @@ export const setupCors = (app: INestApplication<any>) => {
   console.log({ isDev });
 
   app.enableCors({
-    allowedHeaders: isDev ? '*' : [],
-    origin: isDev ? '*' : [],
+    allowedHeaders: '*',
+    origin: '*',
   });
 };

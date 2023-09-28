@@ -70,4 +70,4 @@ yarn run dev
 ## Useful Links
 
 
-- [Loom video explaining how to deploy the application within Docker containers](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
+- [Youtube video explaining the project](https://youtu.be/jnnSkj54fFM)
