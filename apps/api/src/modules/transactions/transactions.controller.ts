@@ -12,13 +12,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { randomBytes } from 'crypto';
 import { Response } from 'express';
-import multer from 'multer';
 import { UserNotFoundError } from '../auth/errors/auth.errors';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { APITransaction } from './dto/list-user-transactions.dto';
 import { TransactionEntity } from './entities/transaction.entity';
+import { storageOptions } from './helpers/fileUpload.helper';
 import {
   GetAnalyticsApiDocs,
   GetTransactinsApiDocs,
@@ -32,19 +31,7 @@ export class TransactionsController {
 
   @UploadTransactionsApiDocs()
   @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: multer.diskStorage({
-        destination: './uploads/',
-        filename: (request, file, callback) => {
-          const fileHash = randomBytes(16).toString('hex');
-          const fileName = `${fileHash}-${file.originalname}`;
-
-          return callback(null, fileName);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file', storageOptions))
   @UseGuards(AuthGuard)
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
